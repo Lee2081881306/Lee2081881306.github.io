@@ -228,6 +228,962 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/21/JDBC_03/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/10/21/JDBC_03/" itemprop="url">JDBC_03</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-21T09:46:29+08:00">
+                2019-10-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Day-51-JDBC03"><a href="#Day-51-JDBC03" class="headerlink" title="Day_51 JDBC03"></a>Day_51 JDBC03</h1><h2 id="Jdbc连接的六个步骤，O-R-mapping-object-relationship-mapping-对象关系映射-，DAO-data-access-object数据访问对象-，java日期类型的转换"><a href="#Jdbc连接的六个步骤，O-R-mapping-object-relationship-mapping-对象关系映射-，DAO-data-access-object数据访问对象-，java日期类型的转换" class="headerlink" title="Jdbc连接的六个步骤，O-R mapping(object relationship mapping 对象关系映射)，DAO(data access object数据访问对象)，java日期类型的转换"></a>Jdbc连接的六个步骤，O-R mapping(object relationship mapping 对象关系映射)，DAO(data access object数据访问对象)，java日期类型的转换</h2><h3 id="一、Jdbc六个步骤（复习）"><a href="#一、Jdbc六个步骤（复习）" class="headerlink" title="一、Jdbc六个步骤（复习）"></a>一、Jdbc六个步骤（复习）</h3><blockquote>
+<ol>
+<li><h4 id="六个步骤"><a href="#六个步骤" class="headerlink" title="六个步骤"></a>六个步骤</h4><blockquote>
+<ul>
+<li>1、注册Driver</li>
+<li>2、获取连接（url  username   password）</li>
+<li>3、创建PreparedStatement传送工具（提供sql命令）</li>
+<li>4、执行sql（完整的sql–&gt;pstm执行；半成品sql–&gt;pstm.setXxxx()–&gt;pstm执行    executeUpdate()–&gt;int     executeQuery()–&gt;ResultSet）</li>
+<li>处理结果集（next()   getXxx(字段下标)）</li>
+<li>释放资源  rs–&gt;pstm–&gt;conn</li>
+</ul>
+</blockquote>
+</li>
+<li><h4 id="JdbcUtil"><a href="#JdbcUtil" class="headerlink" title="JdbcUtil"></a>JdbcUtil</h4><blockquote>
+<ul>
+<li>函数的封装       配置文件（properties   xml）</li>
+</ul>
+<hr>
+</blockquote>
+</li>
+</ol>
+</blockquote>
+<h3 id="二、-O-R-mapping（object-relationship-mapping对象关系映射）"><a href="#二、-O-R-mapping（object-relationship-mapping对象关系映射）" class="headerlink" title="二、==O-R mapping（object relationship mapping对象关系映射）=="></a>二、==O-R mapping（object relationship mapping对象关系映射）==</h3><blockquote>
+<ol>
+<li><h4 id="关系图解："><a href="#关系图解：" class="headerlink" title="关系图解："></a>关系图解：</h4><blockquote>
+<h4 id=""><a href="#" class="headerlink" title=""></a><img src=".%5CPic%5C3-1.PNG" alt="3-1"></h4><p>从数据库中获取的数据  放在ResultSet（结果集中）,为了方便对于结果集的处理   将结果集中的每一条信息都保存在 一个<strong>对象</strong>中（对象需要实现序列化，为了以后使用对象流对文件进行读写）  ==数据的每一个字段 ——&gt;对象的每一种属性==。</p>
+<hr>
+</blockquote>
+</li>
+</ol>
+</blockquote>
+<h3 id="三、-DAO（data-access-object）数据访问对象"><a href="#三、-DAO（data-access-object）数据访问对象" class="headerlink" title="三、==DAO（data access object）数据访问对象=="></a>三、==DAO（data access object）数据访问对象==</h3><blockquote>
+<ol>
+<li><h4 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h4><blockquote>
+<h5 id="完成对数据库一张表的所有增删查改操作"><a href="#完成对数据库一张表的所有增删查改操作" class="headerlink" title="完成对数据库一张表的所有增删查改操作"></a>完成对数据库一张表的所有增删查改操作</h5><hr>
+</blockquote>
+</li>
+<li><h4 id="命名规范"><a href="#命名规范" class="headerlink" title="命名规范"></a>命名规范</h4><blockquote>
+<h5 id="表名-DAO"><a href="#表名-DAO" class="headerlink" title="表名 + DAO"></a>表名 + DAO</h5><hr>
+</blockquote>
+</li>
+<li><h4 id="Dao的数量"><a href="#Dao的数量" class="headerlink" title="Dao的数量"></a>Dao的数量</h4><blockquote>
+<h5 id="一般一张表对应一个Dao程序"><a href="#一般一张表对应一个Dao程序" class="headerlink" title="一般一张表对应一个Dao程序"></a>一般一张表对应一个Dao程序</h5><hr>
+</blockquote>
+</li>
+<li><h4 id="构成"><a href="#构成" class="headerlink" title="构成"></a>构成</h4><blockquote>
+<h5 id="常规的五个方法"><a href="#常规的五个方法" class="headerlink" title="常规的五个方法"></a>常规的五个方法</h5><p><img src=".%5CPic%5C3-2.PNG" alt="3-2"></p>
+<hr>
+</blockquote>
+</li>
+</ol>
+</blockquote>
+<h3 id="四、java中的日期类型转换"><a href="#四、java中的日期类型转换" class="headerlink" title="四、java中的日期类型转换"></a>四、java中的日期类型转换</h3><blockquote>
+<ol>
+<li><h4 id="进行日期转换的原因"><a href="#进行日期转换的原因" class="headerlink" title="进行日期转换的原因"></a>进行日期转换的原因</h4><blockquote>
+<ul>
+<li>在java程序中，所有的日期类都是java.util.Date类型，  在数据库中  存储日期的类型是java.sql.Date   而通常情况下，用户输入日期 都是以字符串的形式输入的</li>
+</ul>
+</blockquote>
+</li>
+<li><h4 id="字符串——-gt-java-util-Date"><a href="#字符串——-gt-java-util-Date" class="headerlink" title="字符串——&gt;java.util.Date"></a>字符串——&gt;java.util.Date</h4><blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">String time1 = <span class="string">"2018-09-09"</span>;</span><br><span class="line"><span class="comment">//创建一个“简单日期格式”类对象，参数为日期的格式，月份用大写MM</span></span><br><span class="line">SimpleDateFormat sdf = <span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyy-MM-dd"</span>);</span><br><span class="line">java.util.Date time2 = sdf.parse(time1);</span><br></pre></td></tr></table></figure>
+</blockquote>
+</li>
+<li><h4 id="java-util-Date——-gt-字符串"><a href="#java-util-Date——-gt-字符串" class="headerlink" title="java.util.Date——&gt;字符串"></a>java.util.Date——&gt;字符串</h4><blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">java.util.Date time3 = <span class="keyword">new</span> java.util.Date();</span><br><span class="line">String time4 = sdf.format(time3);</span><br><span class="line">System.out.println(time4)</span><br></pre></td></tr></table></figure>
+</blockquote>
+</li>
+<li><h4 id="java-util-Date——-gt-java-sql-Date"><a href="#java-util-Date——-gt-java-sql-Date" class="headerlink" title="java.util.Date——&gt;java.sql.Date"></a>java.util.Date——&gt;java.sql.Date</h4><blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//先将java.util.Date 使用getTime（）转成毫秒  在转成sql.Date</span></span><br><span class="line">java.sql.Date time2 = <span class="keyword">new</span> java.sql.Date(java.util.Date time1.getTime()) ;</span><br></pre></td></tr></table></figure>
+
+<hr>
+</blockquote>
+</li>
+</ol>
+</blockquote>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/21/JDBC_02/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/10/21/JDBC_02/" itemprop="url">JDBC_02</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-21T09:46:29+08:00">
+                2019-10-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Day-51-JDBC02"><a href="#Day-51-JDBC02" class="headerlink" title="Day_51 JDBC02"></a>Day_51 JDBC02</h1><h2 id="编写JDBC程序"><a href="#编写JDBC程序" class="headerlink" title="编写JDBC程序"></a>编写JDBC程序</h2><h3 id="一、jdbc程序的创建过程"><a href="#一、jdbc程序的创建过程" class="headerlink" title="一、jdbc程序的创建过程"></a>一、jdbc程序的创建过程</h3><blockquote>
+<ol>
+<li><h4 id="注册Driver——加载Driver驱动类"><a href="#注册Driver——加载Driver驱动类" class="headerlink" title="==注册Driver——加载Driver驱动类=="></a>==注册Driver——加载Driver驱动类==</h4><blockquote>
+<ul>
+<li><p>因为JVM在使用一个类的时候 需要获取 哪个类的“类对象”，所以需要先使用反射的方法，获取Driver类的“类对象”</p>
+<p><strong>Class.forName(“oracle.jdbc.OracleDriver”)</strong></p>
+</li>
+<li><p>使用是可以同时注册多个Driver</p>
+</li>
+</ul>
+<hr>
+</blockquote>
+</li>
+<li><h4 id="获取连接Connection"><a href="#获取连接Connection" class="headerlink" title="获取连接Connection"></a>获取连接Connection</h4><blockquote>
+<ul>
+<li><p>conn = DriverManger.getConnection(地址、用户名、密码)</p>
+<p>实际负责建立数据连接的是Driver  </p>
+<p><strong>DriverManager类是驱动的管理者，调用他的静态方法getConnection，从而获取一个Connection对象的对象</strong></p>
+</li>
+<li><p>地址的组成结构（url）</p>
+<p><img src=".%5CPic%5C2-1.PNG" alt="2-1"></p>
+</li>
+</ul>
+<hr>
+</blockquote>
+</li>
+<li><h4 id="创建Statement——传送工具"><a href="#创建Statement——传送工具" class="headerlink" title="创建Statement——传送工具"></a>创建Statement——传送工具</h4><blockquote>
+<ul>
+<li><p>jdbc实际是把用户定义的sql语句，传送到数据库中，然后数据库执行对应的sql语句，Statement就相当于传送工具，将sql语句传输给数据库</p>
+<p><strong>Statment   stm = conn.createStatement();</strong></p>
+</li>
+</ul>
+<hr>
+</blockquote>
+</li>
+<li><h4 id="执行sql命令"><a href="#执行sql命令" class="headerlink" title="执行sql命令"></a>执行sql命令</h4><blockquote>
+<ul>
+<li>==executeUpdate(sql)== : 主要用来执行  <em>insert update delete</em>  命令 , 方法有一个整数类型的返回值( 代表命令执行后,影响了表里的几行数据 )</li>
+<li>==executeQuery(sql)== : 主要用来执行  <em>select</em>  命令 , 方法返回值为ResultSet(里面封装了查询结果数据 )</li>
+<li>execute(sql) : 可以执行所有sql ( 特别是DDL命令 ) , 返回一个boolean值( 是否有结果集返回 )</li>
+</ul>
+<hr>
+</blockquote>
+</li>
+<li><h4 id="处理结果集"><a href="#处理结果集" class="headerlink" title="处理结果集"></a>处理结果集</h4><blockquote>
+<ul>
+<li><h5 id="当sql命令是select时，因为需要返回查询的结果，所以需要一个结果及（ResultSet）用来接收查询到的结果"><a href="#当sql命令是select时，因为需要返回查询的结果，所以需要一个结果及（ResultSet）用来接收查询到的结果" class="headerlink" title="当sql命令是select时，因为需要返回查询的结果，所以需要一个结果及（ResultSet）用来接收查询到的结果"></a>当sql命令是select时，因为需要返回查询的结果，所以需要一个结果及（ResultSet）用来接收查询到的结果</h5><h5 id=""><a href="#" class="headerlink" title=""></a><img src=".%5CPic%5C2-2.PNG" alt="2-2"></h5></li>
+</ul>
+<hr>
+</blockquote>
+</li>
+<li><h4 id="释放资源——按照资源创建的顺序反向释放"><a href="#释放资源——按照资源创建的顺序反向释放" class="headerlink" title="释放资源——按照资源创建的顺序反向释放"></a>释放资源——按照资源创建的顺序反向释放</h4><blockquote>
+<p>ResultSet——&gt;Statement——&gt;Connection</p>
+<hr>
+</blockquote>
+</li>
+</ol>
+</blockquote>
+<h3 id="二、带参的sql命令的执行-（PreparedStatement）"><a href="#二、带参的sql命令的执行-（PreparedStatement）" class="headerlink" title="二、带参的sql命令的执行==（PreparedStatement）=="></a>二、带参的sql命令的执行==（PreparedStatement）==</h3><blockquote>
+<ol>
+<li><h4 id="使用Statement-执行sql命令的不足"><a href="#使用Statement-执行sql命令的不足" class="headerlink" title="使用Statement 执行sql命令的不足"></a>使用Statement 执行sql命令的不足</h4><blockquote>
+<ul>
+<li><p>进行字符串的拼接较为麻烦</p>
+</li>
+<li><p>sql注入  可能引起数据资源的不正当获取（使数据不安全）</p>
+<p><img src=".%5CPic%5C2-3.PNG" alt="2-3"></p>
+</li>
+</ul>
+<hr>
+</blockquote>
+</li>
+<li><h4 id="使用PreparedStatement执行sql命令-—-Statement的子接口"><a href="#使用PreparedStatement执行sql命令-—-Statement的子接口" class="headerlink" title="使用PreparedStatement执行sql命令 — Statement的子接口"></a>使用PreparedStatement执行sql命令 — Statement的子接口</h4><blockquote>
+<ul>
+<li><p>创建PreparedStatement对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">String sql = “ select * from account where cardid=? And password=? ”; </span><br><span class="line">pstm = conn.prepareStatement( sql ); </span><br></pre></td></tr></table></figure>
+
+<p><strong>注：pstm允许用户给定的sql是一个“半成品”，使用“？”补全sql语句，后续使用时，需要用户指定“？”指代的值</strong>   </p>
+</li>
+<li><p>为“？”设置值  ——pstm提供了一些列的==setXxx(..)==方法</p>
+<p>​     pstm.setInt( p1,p2)     pstm.setString( p1,p2 )    </p>
+<p>​         pstm.setDouble(p1,p2)   pstm.setDate(p1,p2)</p>
+<p>​         P1 — ?的下标(从1开始)     p2 — ?的值</p>
+<p>​         注意: setDate时值的类型为java.sql.Date</p>
+</li>
+<li><p>执行sql命令</p>
+<p><strong>executeUpdate()    增、删、改</strong></p>
+<p><strong>executeQuery()      查   结果会返回一个ResultSet</strong></p>
+</li>
+</ul>
+<hr>
+</blockquote>
+</li>
+<li><h4 id="PreparedStatement与Statement的区别"><a href="#PreparedStatement与Statement的区别" class="headerlink" title="PreparedStatement与Statement的区别"></a>PreparedStatement与Statement的区别</h4><blockquote>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>区别</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>构建</td>
+<td>stm –&gt; conn.createStatement() 不需要指定sql              Pstm –&gt; conn.prepareStatement(sql)  半成品都行</td>
+</tr>
+<tr>
+<td>执行</td>
+<td>stm.executeXxxxx( sql );                           pstm.executeXxxx( );</td>
+</tr>
+<tr>
+<td>选择</td>
+<td>① 单条命令执行 : 带参sql选择pstm – 安全                       ② 多条”同构sql” : 选择pstm效率高( 预编译 )</td>
+</tr>
+</tbody></table>
+<hr>
+</blockquote>
+</li>
+</ol>
+</blockquote>
+<h3 id="三、JDBCUtil工具类的封装"><a href="#三、JDBCUtil工具类的封装" class="headerlink" title="三、JDBCUtil工具类的封装"></a>三、JDBCUtil工具类的封装</h3><blockquote>
+<ol>
+<li><h4 id="代码封装的基本套路"><a href="#代码封装的基本套路" class="headerlink" title="代码封装的基本套路"></a>代码封装的基本套路</h4><blockquote>
+<ul>
+<li>能够完成一定功能,并且多次出现在程序中的一段代码,需要被封装成函数,提高代码复用性</li>
+<li>对于程序中可能会变化的数据, 将其定义在文本文件(配置文件)中 , 程序里通过io获取文件数据</li>
+</ul>
+<hr>
+</blockquote>
+</li>
+<li><h4 id="配置文件（纯文本文件）"><a href="#配置文件（纯文本文件）" class="headerlink" title="配置文件（纯文本文件）"></a>配置文件（纯文本文件）</h4><blockquote>
+<ul>
+<li><p>常规文件类型 :  xxx.properties文件   xxx.xml文件、properties文件格式 —  key=value  每一行只存一个数据</p>
+</li>
+<li><p>集合类Properties — 专业处理properties文件的工具</p>
+<p>​        ① key和value都是String</p>
+<p>​        ② 提供了函数 load( InputStream – 读配置文件的流对象 ) 获取配置文件信息</p>
+<p>​        ③ map.getProperty( key ) — value</p>
+</li>
+</ul>
+<hr>
+</blockquote>
+</li>
+<li><h4 id="文件流的处理"><a href="#文件流的处理" class="headerlink" title="文件流的处理"></a>文件流的处理</h4><blockquote>
+<ul>
+<li><p>① Class类提供了getResourceAsStream() , 可以帮助获取一个读文件的字节输入流</p>
+<p>② 方法需要的路径为”虚拟路径” — 从 ”/” 开始写 , 代表当前环境的Classpath在运行时,</p>
+<p>会自动获取当前环境的classpath,替换掉“/”</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//创建JdbcUtil工具类</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JdbcUtil</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> Properties map = <span class="keyword">new</span> Properties();</span><br><span class="line">	<span class="comment">//静态代码块 为静态属性赋值 </span></span><br><span class="line">	<span class="keyword">static</span>&#123;</span><br><span class="line">		<span class="comment">//读文件获取值 ——Properties</span></span><br><span class="line">		InputStream is = <span class="keyword">null</span>;</span><br><span class="line">		<span class="keyword">try</span>&#123;</span><br><span class="line">			is = JdbcUtil.class.getResourceAsStream(<span class="string">"/util/conn.properties"</span>);</span><br><span class="line">			map.load(is);</span><br><span class="line">		&#125;<span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;<span class="keyword">finally</span>&#123;</span><br><span class="line">			<span class="keyword">if</span>(is!=<span class="keyword">null</span>) <span class="keyword">try</span>&#123;is.close();</span><br><span class="line">							&#125;<span class="keyword">catch</span>(Exception e)&#123;&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//创建Connection 方法</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Connection <span class="title">getConnection</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">		Class.forName(map.getProperty(<span class="string">"driver"</span>));</span><br><span class="line">		Connection conn = DriverManager.getConnection(map.getProperty(<span class="string">"url"</span>),</span><br><span class="line">				  map.getProperty(<span class="string">"username"</span>),map.getProperty(<span class="string">"password"</span>));</span><br><span class="line">		<span class="keyword">return</span> conn;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//关闭资源方法</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">(ResultSet rs,PreparedStatement pstm,Connection conn)</span></span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(rs!=<span class="keyword">null</span>) <span class="keyword">try</span>&#123;rs.close();&#125;<span class="keyword">catch</span>(Exception e)&#123;&#125;</span><br><span class="line">		<span class="keyword">if</span>(pstm!=<span class="keyword">null</span>)<span class="keyword">try</span>&#123;pstm.close();&#125;<span class="keyword">catch</span>(Exception e)&#123;&#125;</span><br><span class="line">		<span class="keyword">if</span>(conn!=<span class="keyword">null</span>)<span class="keyword">try</span>&#123;conn.close();&#125;<span class="keyword">catch</span> (Exception e) &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+</blockquote>
+</li>
+</ol>
+</blockquote>
+<hr>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/21/JDBC_01/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/10/21/JDBC_01/" itemprop="url">JDBC_01</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-21T09:46:29+08:00">
+                2019-10-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Day-50-JDBC"><a href="#Day-50-JDBC" class="headerlink" title="Day_50 JDBC"></a>Day_50 JDBC</h1><h2 id="jdbc的概念、导入到myeclipse"><a href="#jdbc的概念、导入到myeclipse" class="headerlink" title="jdbc的概念、导入到myeclipse"></a>jdbc的概念、导入到myeclipse</h2><h3 id="一、引言："><a href="#一、引言：" class="headerlink" title="一、引言："></a>一、引言：</h3><blockquote>
+<ul>
+<li><h4 id="概念：java语言连接数据库的桥梁"><a href="#概念：java语言连接数据库的桥梁" class="headerlink" title="概念：java语言连接数据库的桥梁"></a>概念：java语言连接数据库的桥梁</h4><blockquote>
+<p><img src=".%5CPic%5C1-1.PNG" alt="1-1"></p>
+</blockquote>
+</li>
+<li><h4 id="组成"><a href="#组成" class="headerlink" title="组成"></a>组成</h4><blockquote>
+<ul>
+<li><p><strong>接口</strong>：由sun定义，提供给程序员开发使用，通过java.sql包和javax.sql包 给出</p>
+</li>
+<li><p><strong>实现类</strong>：由数据库厂商提供，需要配置到开发环境里，通常以xxx.jar包的形式提供</p>
+<p>​            jdk—6或更早    使用ojdbc5.jar     jak—7或更新   使用ojdbc6.jar</p>
+<p><img src=".%5CPic%5C1-2.PNG" alt="1-2"></p>
+</li>
+</ul>
+</blockquote>
+</li>
+<li><h4 id="搭建开发环境"><a href="#搭建开发环境" class="headerlink" title="搭建开发环境"></a>搭建开发环境</h4><blockquote>
+<p>*&lt;将jar包配置到开发环境&gt;*</p>
+<ul>
+<li>使用的是普通的文本编译器 ——将jar包所在路径配置到环境变量CLASSPATH中</li>
+<li>使用的是集成开发工具 myeclipse ——以project管理代码<ul>
+<li>在当前project下面新建一个lib文件夹</li>
+<li>将jar拷贝到文件夹下</li>
+<li>右键选中 jar-&gt;add to build path</li>
+</ul>
+</li>
+<li>在myeclipse里配置执行sql命令的窗口<ul>
+<li>windows -&gt;show view -&gt;other -&gt;搜索 db browse -&gt;选中</li>
+<li>窗口里点击右键-&gt;new connection</li>
+<li><img src=".%5CPic%5C1-3.PNG" alt="1-3"></li>
+<li>在项目里新建sql包，包里面新建xxx.sql文件，在文件中可以编写执行sql命令，默认事务为一条一提交（<strong>自动补充commit</strong>）</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+</blockquote>
+<hr>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/21/JDBC_04/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/10/21/JDBC_04/" itemprop="url">JDBC_04</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-21T09:46:29+08:00">
+                2019-10-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Day-54-JDBC-04"><a href="#Day-54-JDBC-04" class="headerlink" title="Day_54 JDBC_04"></a>Day_54 JDBC_04</h1><h2 id="业务层、视图层、三层结构、连接池"><a href="#业务层、视图层、三层结构、连接池" class="headerlink" title="业务层、视图层、三层结构、连接池"></a>业务层、视图层、三层结构、连接池</h2><h3 id="一、Review"><a href="#一、Review" class="headerlink" title="一、Review"></a>一、Review</h3><blockquote>
+<ol>
+<li><h4 id="实体类的封装-——entity"><a href="#实体类的封装-——entity" class="headerlink" title="实体类的封装 ——entity"></a>实体类的封装 ——entity</h4><blockquote>
+<ul>
+<li>作用：用来封装数据库中表里的数据（通过属性来保存表里相应字段的数据）</li>
+<li>要求：属性私有  get 和 set   无参构造  实现Serializable</li>
+</ul>
+<hr>
+</blockquote>
+</li>
+<li><h4 id="O-R-Mapping-——DAO"><a href="#O-R-Mapping-——DAO" class="headerlink" title="O-R Mapping  ——DAO"></a>O-R Mapping  ——DAO</h4><blockquote>
+<ul>
+<li><p>==db  与  java  里的对应关系==</p>
+<table>
+<thead>
+<tr>
+<th align="center">数据库</th>
+<th align="center">java</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Table</td>
+<td align="center">class</td>
+</tr>
+<tr>
+<td align="center">字段</td>
+<td align="center">属性</td>
+</tr>
+<tr>
+<td align="center">行</td>
+<td align="center">对象</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>mapping在代码上的体现 ——DAO</p>
+<ol>
+<li><p>DAO：<strong>数据访问对象——完成对数据库一张表的增删查改</strong></p>
+</li>
+<li><p>步骤：①定义Dao接口（给出方法的声明与定义）</p>
+<p>​        ②选择特定的技术实现接口的定义（JDBC）</p>
+</li>
+<li><p>==常规方法：增、删、更新、查一个、查全部==</p>
+<table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">实现过程</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">insert</td>
+<td align="center">参数是实体对象（没有ID），实现时先补齐参数（给ID属性赋值），再插入到数据库</td>
+</tr>
+<tr>
+<td align="center">update</td>
+<td align="center">参数是对象（完整，属性可能会被更改），实现是需要对整行数据进行修改（除了id）</td>
+</tr>
+<tr>
+<td align="center">delete</td>
+<td align="center">参数只有主属性（不要掺杂其他属性）</td>
+</tr>
+<tr>
+<td align="center">selectOne</td>
+<td align="center">参数为id</td>
+</tr>
+<tr>
+<td align="center">selectAll</td>
+<td align="center">返回值为List<entity></td>
+</tr>
+</tbody></table>
+</li>
+<li><p>结果：屏蔽数据库的差异</p>
+</li>
+</ol>
+</li>
+</ul>
+<hr>
+</blockquote>
+</li>
+</ol>
+</blockquote>
+<h3 id="二、业务层（Service层，biz层）"><a href="#二、业务层（Service层，biz层）" class="headerlink" title="二、业务层（Service层，biz层）"></a>二、业务层（Service层，biz层）</h3><blockquote>
+<ol>
+<li><h4 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h4><blockquote>
+<p>通过定义函数来完成用户实际的业务需求（最终业务的实现还是会落实到数据库的访问操作Dao）</p>
+</blockquote>
+</li>
+<li><h4 id="业务的其他作用"><a href="#业务的其他作用" class="headerlink" title="业务的其他作用"></a>业务的其他作用</h4><blockquote>
+<p>除了完成业务需求，还要控制事务</p>
+</blockquote>
+</li>
+<li><h4 id="Jdbc里的事务处理"><a href="#Jdbc里的事务处理" class="headerlink" title="Jdbc里的事务处理"></a>Jdbc里的事务处理</h4><blockquote>
+<p>默认为一条一提交（程序会默认再每一条命令后自动补全commit）</p>
+</blockquote>
+</li>
+<li><h4 id="Jdbc里手动控制事务的API"><a href="#Jdbc里手动控制事务的API" class="headerlink" title="==Jdbc里手动控制事务的API=="></a>==Jdbc里手动控制事务的API==</h4><blockquote>
+<p>①方法</p>
+<p>​    设置事务提交策略：conn.setAutoCommit(boolean); <em>true：自动 、false：手动</em></p>
+<p>​    提交：conn.commit();</p>
+<p>​    回滚：conn.rollback()；</p>
+<p>​    <strong>注意：事务提交策略一经设置，永久生效（直到conn消亡）</strong></p>
+<p>②代码结构</p>
+<p>​    <img src=".%5CPic%5C4-1.PNG" alt="4-1"></p>
+<hr>
+</blockquote>
+</li>
+<li><h4 id="如何将事务控制应用到现有的业务层代码中"><a href="#如何将事务控制应用到现有的业务层代码中" class="headerlink" title="如何将事务控制应用到现有的业务层代码中"></a>如何将事务控制应用到现有的业务层代码中</h4><blockquote>
+<p>①方式一：参数传递（造成接口污染）</p>
+<p>​    &lt;接口污染就是：会强制限制Dao层连接数据库的技术要求&gt;</p>
+<p><img src=".%5CPic%5C4-2.PNG" alt="4-2"></p>
+<p>②方式二：借助ThreadLocal类完成工作</p>
+<ul>
+<li><p>作用：线程局部变量</p>
+<p>Ⅰ、<u>一个ThreadLocal对象可以为同一个线程绑定一个”独占资源“，使得再这个线程体的任意代码部分都可以获取这个数据</u></p>
+<p>Ⅱ、==可以为不同的线程绑定不同的数据==</p>
+</li>
+<li><p><strong>使用步骤</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">操作流程</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Ⅰ、创建ThreadLocal对象，并且在创建过程中通过&lt;泛型&gt;指定绑定数据的类型  <code>ThreadLocal&lt;数据类型&gt; tol = new ThreadLocal&lt;数据类型&gt;();</code></td>
+</tr>
+<tr>
+<td align="left">Ⅱ、为线程绑定数据  <code>tol.set(数据);</code></td>
+</tr>
+<tr>
+<td align="left">Ⅲ：获取数据  <code>tol.get(数据)  获取当前绑定的线程的数据</code></td>
+</tr>
+<tr>
+<td align="left">Ⅳ：解除绑定：<code>tol.remove()</code></td>
+</tr>
+</tbody></table>
+</li>
+<li><p>在实际中的应用</p>
+<p>业务功能代码分散在多个代码块中，<strong>但是属于同一个线程体的内容</strong></p>
+<p>使用时：我们希望同一个线程只能获取一个连接对象</p>
+<p>​        不同的线程获取不同的连接对象</p>
+<p><u>对于util文件的修改</u></p>
+<p><img src=".%5CPic%5C4-3.PNG" alt="4-3"></p>
+<p><img src=".%5CPic%5C4-4.PNG" alt="4-4"></p>
+</li>
+<li><p>==<strong>tol解除绑定</strong>==</p>
+<p>理论上连接应该在线程结束时关闭，实际开发中，因为无法确定线程结束的时间，所以在事务结束时对conn进行关闭，一个事务 会由多个Dao组合成，所以conn一定不能再Dao层中关闭，只能在业务层中关闭conn  ==关闭后一定要解除绑定 tol.remove()==（防止多线程的  并发问题）</p>
+</li>
+</ul>
+<hr>
+</blockquote>
+</li>
+<li><h4 id="业务层代码开发步骤"><a href="#业务层代码开发步骤" class="headerlink" title="业务层代码开发步骤"></a>业务层代码开发步骤</h4><blockquote>
+<p>①获取连接，设置提交策略（手动）</p>
+<p>②完成业务需求（<em>数据的判断，调用dao层方法，业务数据处理</em>）</p>
+<p>③事务进行<strong>commit</strong> 或 <strong>rollback</strong></p>
+<p>④关闭资源（<em>业务层只关闭conn， rs 和 pstm在Dao中关闭</em>）</p>
+<hr>
+</blockquote>
+</li>
+</ol>
+</blockquote>
+<h3 id="三、View（显示逻辑——界面-或者-视图）"><a href="#三、View（显示逻辑——界面-或者-视图）" class="headerlink" title="三、View（显示逻辑——界面 或者  视图）"></a>三、View（显示逻辑——界面 或者  视图）</h3><blockquote>
+<ol>
+<li><h4 id="作用-1"><a href="#作用-1" class="headerlink" title="作用"></a>作用</h4><blockquote>
+<p>提供人机交互的通道（<strong>数据录入</strong>  和 <strong>结果展示</strong>）</p>
+</blockquote>
+</li>
+<li><h4 id="数据录入-amp-展示"><a href="#数据录入-amp-展示" class="headerlink" title="数据录入&amp;展示"></a>数据录入&amp;展示</h4><blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//录入数据</span></span><br><span class="line">Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">Xxxx v = sc.nextXxxx();</span><br><span class="line"><span class="comment">//展示数据</span></span><br><span class="line">System.oyt.println(<span class="string">".."</span>)</span><br></pre></td></tr></table></figure>
+
+<hr>
+</blockquote>
+</li>
+<li><h4 id="代码结构"><a href="#代码结构" class="headerlink" title="代码结构"></a>代码结构</h4><blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Public <span class="keyword">void</span>  <span class="title">kaihu</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">//1. 录入数据</span></span><br><span class="line">         Try&#123;</span><br><span class="line">        <span class="comment">//2. 创建业务层对象 , 调用业务层方法 ---&gt; 返回结果数据 </span></span><br><span class="line">             System.out.println(“恭喜你,成功.....”);</span><br><span class="line">         &#125;<span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">             System.out.println( e.getMessage()) ;       </span><br><span class="line">         &#125;</span><br><span class="line">     &#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+</blockquote>
+</li>
+</ol>
+</blockquote>
+<h3 id="四、三层结构"><a href="#四、三层结构" class="headerlink" title="四、三层结构"></a>四、三层结构</h3><blockquote>
+<ol>
+<li><h4 id="结构分析"><a href="#结构分析" class="headerlink" title="结构分析"></a>结构分析</h4><blockquote>
+<p>用户 ( 人 — main )</p>
+<p>-————————————————-</p>
+<p>View  —-  采集数据 ,展示结果</p>
+<p>-————————————————-</p>
+<p>Service —- 业务逻辑(完成业务功能)</p>
+<p>-————————————————-</p>
+<p>Dao —- 完成数据库访问操作</p>
+<p>-————————————————-</p>
+<p>Db  — table</p>
+<hr>
+</blockquote>
+</li>
+<li><h4 id="图示案例"><a href="#图示案例" class="headerlink" title="图示案例"></a>图示案例</h4><blockquote>
+<h4 id=""><a href="#" class="headerlink" title=""></a><img src="F:%5Ctyp%E7%AC%94%E8%AE%B0%5CJDBC%5CPic%5C4-5.PNG" alt="4-5"></h4><p><img src=".%5CPic%5C4-6.PNG" alt="4-6"></p>
+<hr>
+</blockquote>
+</li>
+</ol>
+</blockquote>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/21/hello-world/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -393,7 +1349,7 @@
               
                 <a href="/archives/%20%7C%7C%20archive">
               
-                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

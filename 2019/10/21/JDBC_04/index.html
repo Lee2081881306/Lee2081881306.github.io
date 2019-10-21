@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Day_54 JDBC_04业务层、视图层、三层结构、连接池一、Review  实体类的封装 ——entity  作用：用来封装数据库中表里的数据（通过属性来保存表里相应字段的数据） 要求：属性私有  get 和 set   无参构造  实现Serializable     O-R Mapping  ——DAO  ==db  与  java  里的对应关系==    数据库 java    Tab">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JDBC_04">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;10&#x2F;21&#x2F;JDBC_04&#x2F;index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Day_54 JDBC_04业务层、视图层、三层结构、连接池一、Review  实体类的封装 ——entity  作用：用来封装数据库中表里的数据（通过属性来保存表里相应字段的数据） 要求：属性私有  get 和 set   无参构造  实现Serializable     O-R Mapping  ——DAO  ==db  与  java  里的对应关系==    数据库 java    Tab">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;10&#x2F;21&#x2F;JDBC_04&#x2F;.%5CPic%5C4-1.PNG">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;10&#x2F;21&#x2F;JDBC_04&#x2F;.%5CPic%5C4-2.PNG">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;10&#x2F;21&#x2F;JDBC_04&#x2F;.%5CPic%5C4-3.PNG">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;10&#x2F;21&#x2F;JDBC_04&#x2F;.%5CPic%5C4-4.PNG">
+<meta property="og:image" content="f:%5Ctyp%E7%AC%94%E8%AE%B0%5CJDBC%5CPic%5C4-5.PNG">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;10&#x2F;21&#x2F;JDBC_04&#x2F;.%5CPic%5C4-6.PNG">
+<meta property="og:updated_time" content="2019-09-27T10:22:20.594Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;10&#x2F;21&#x2F;JDBC_04&#x2F;.%5CPic%5C4-1.PNG">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/10/21/JDBC_04/"/>
+
+
+
+
+
+  <title>JDBC_04 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/21/JDBC_04/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">JDBC_04</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-21T09:46:29+08:00">
+                2019-10-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Day-54-JDBC-04"><a href="#Day-54-JDBC-04" class="headerlink" title="Day_54 JDBC_04"></a>Day_54 JDBC_04</h1><h2 id="业务层、视图层、三层结构、连接池"><a href="#业务层、视图层、三层结构、连接池" class="headerlink" title="业务层、视图层、三层结构、连接池"></a>业务层、视图层、三层结构、连接池</h2><h3 id="一、Review"><a href="#一、Review" class="headerlink" title="一、Review"></a>一、Review</h3><blockquote>
+<ol>
+<li><h4 id="实体类的封装-——entity"><a href="#实体类的封装-——entity" class="headerlink" title="实体类的封装 ——entity"></a>实体类的封装 ——entity</h4><blockquote>
+<ul>
+<li>作用：用来封装数据库中表里的数据（通过属性来保存表里相应字段的数据）</li>
+<li>要求：属性私有  get 和 set   无参构造  实现Serializable</li>
+</ul>
+<hr>
+</blockquote>
+</li>
+<li><h4 id="O-R-Mapping-——DAO"><a href="#O-R-Mapping-——DAO" class="headerlink" title="O-R Mapping  ——DAO"></a>O-R Mapping  ——DAO</h4><blockquote>
+<ul>
+<li><p>==db  与  java  里的对应关系==</p>
+<table>
+<thead>
+<tr>
+<th align="center">数据库</th>
+<th align="center">java</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Table</td>
+<td align="center">class</td>
+</tr>
+<tr>
+<td align="center">字段</td>
+<td align="center">属性</td>
+</tr>
+<tr>
+<td align="center">行</td>
+<td align="center">对象</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>mapping在代码上的体现 ——DAO</p>
+<ol>
+<li><p>DAO：<strong>数据访问对象——完成对数据库一张表的增删查改</strong></p>
+</li>
+<li><p>步骤：①定义Dao接口（给出方法的声明与定义）</p>
+<p>​        ②选择特定的技术实现接口的定义（JDBC）</p>
+</li>
+<li><p>==常规方法：增、删、更新、查一个、查全部==</p>
+<table>
+<thead>
+<tr>
+<th align="center">方法</th>
+<th align="center">实现过程</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">insert</td>
+<td align="center">参数是实体对象（没有ID），实现时先补齐参数（给ID属性赋值），再插入到数据库</td>
+</tr>
+<tr>
+<td align="center">update</td>
+<td align="center">参数是对象（完整，属性可能会被更改），实现是需要对整行数据进行修改（除了id）</td>
+</tr>
+<tr>
+<td align="center">delete</td>
+<td align="center">参数只有主属性（不要掺杂其他属性）</td>
+</tr>
+<tr>
+<td align="center">selectOne</td>
+<td align="center">参数为id</td>
+</tr>
+<tr>
+<td align="center">selectAll</td>
+<td align="center">返回值为List<entity></td>
+</tr>
+</tbody></table>
+</li>
+<li><p>结果：屏蔽数据库的差异</p>
+</li>
+</ol>
+</li>
+</ul>
+<hr>
+</blockquote>
+</li>
+</ol>
+</blockquote>
+<h3 id="二、业务层（Service层，biz层）"><a href="#二、业务层（Service层，biz层）" class="headerlink" title="二、业务层（Service层，biz层）"></a>二、业务层（Service层，biz层）</h3><blockquote>
+<ol>
+<li><h4 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h4><blockquote>
+<p>通过定义函数来完成用户实际的业务需求（最终业务的实现还是会落实到数据库的访问操作Dao）</p>
+</blockquote>
+</li>
+<li><h4 id="业务的其他作用"><a href="#业务的其他作用" class="headerlink" title="业务的其他作用"></a>业务的其他作用</h4><blockquote>
+<p>除了完成业务需求，还要控制事务</p>
+</blockquote>
+</li>
+<li><h4 id="Jdbc里的事务处理"><a href="#Jdbc里的事务处理" class="headerlink" title="Jdbc里的事务处理"></a>Jdbc里的事务处理</h4><blockquote>
+<p>默认为一条一提交（程序会默认再每一条命令后自动补全commit）</p>
+</blockquote>
+</li>
+<li><h4 id="Jdbc里手动控制事务的API"><a href="#Jdbc里手动控制事务的API" class="headerlink" title="==Jdbc里手动控制事务的API=="></a>==Jdbc里手动控制事务的API==</h4><blockquote>
+<p>①方法</p>
+<p>​    设置事务提交策略：conn.setAutoCommit(boolean); <em>true：自动 、false：手动</em></p>
+<p>​    提交：conn.commit();</p>
+<p>​    回滚：conn.rollback()；</p>
+<p>​    <strong>注意：事务提交策略一经设置，永久生效（直到conn消亡）</strong></p>
+<p>②代码结构</p>
+<p>​    <img src=".%5CPic%5C4-1.PNG" alt="4-1"></p>
+<hr>
+</blockquote>
+</li>
+<li><h4 id="如何将事务控制应用到现有的业务层代码中"><a href="#如何将事务控制应用到现有的业务层代码中" class="headerlink" title="如何将事务控制应用到现有的业务层代码中"></a>如何将事务控制应用到现有的业务层代码中</h4><blockquote>
+<p>①方式一：参数传递（造成接口污染）</p>
+<p>​    &lt;接口污染就是：会强制限制Dao层连接数据库的技术要求&gt;</p>
+<p><img src=".%5CPic%5C4-2.PNG" alt="4-2"></p>
+<p>②方式二：借助ThreadLocal类完成工作</p>
+<ul>
+<li><p>作用：线程局部变量</p>
+<p>Ⅰ、<u>一个ThreadLocal对象可以为同一个线程绑定一个”独占资源“，使得再这个线程体的任意代码部分都可以获取这个数据</u></p>
+<p>Ⅱ、==可以为不同的线程绑定不同的数据==</p>
+</li>
+<li><p><strong>使用步骤</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">操作流程</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Ⅰ、创建ThreadLocal对象，并且在创建过程中通过&lt;泛型&gt;指定绑定数据的类型  <code>ThreadLocal&lt;数据类型&gt; tol = new ThreadLocal&lt;数据类型&gt;();</code></td>
+</tr>
+<tr>
+<td align="left">Ⅱ、为线程绑定数据  <code>tol.set(数据);</code></td>
+</tr>
+<tr>
+<td align="left">Ⅲ：获取数据  <code>tol.get(数据)  获取当前绑定的线程的数据</code></td>
+</tr>
+<tr>
+<td align="left">Ⅳ：解除绑定：<code>tol.remove()</code></td>
+</tr>
+</tbody></table>
+</li>
+<li><p>在实际中的应用</p>
+<p>业务功能代码分散在多个代码块中，<strong>但是属于同一个线程体的内容</strong></p>
+<p>使用时：我们希望同一个线程只能获取一个连接对象</p>
+<p>​        不同的线程获取不同的连接对象</p>
+<p><u>对于util文件的修改</u></p>
+<p><img src=".%5CPic%5C4-3.PNG" alt="4-3"></p>
+<p><img src=".%5CPic%5C4-4.PNG" alt="4-4"></p>
+</li>
+<li><p>==<strong>tol解除绑定</strong>==</p>
+<p>理论上连接应该在线程结束时关闭，实际开发中，因为无法确定线程结束的时间，所以在事务结束时对conn进行关闭，一个事务 会由多个Dao组合成，所以conn一定不能再Dao层中关闭，只能在业务层中关闭conn  ==关闭后一定要解除绑定 tol.remove()==（防止多线程的  并发问题）</p>
+</li>
+</ul>
+<hr>
+</blockquote>
+</li>
+<li><h4 id="业务层代码开发步骤"><a href="#业务层代码开发步骤" class="headerlink" title="业务层代码开发步骤"></a>业务层代码开发步骤</h4><blockquote>
+<p>①获取连接，设置提交策略（手动）</p>
+<p>②完成业务需求（<em>数据的判断，调用dao层方法，业务数据处理</em>）</p>
+<p>③事务进行<strong>commit</strong> 或 <strong>rollback</strong></p>
+<p>④关闭资源（<em>业务层只关闭conn， rs 和 pstm在Dao中关闭</em>）</p>
+<hr>
+</blockquote>
+</li>
+</ol>
+</blockquote>
+<h3 id="三、View（显示逻辑——界面-或者-视图）"><a href="#三、View（显示逻辑——界面-或者-视图）" class="headerlink" title="三、View（显示逻辑——界面 或者  视图）"></a>三、View（显示逻辑——界面 或者  视图）</h3><blockquote>
+<ol>
+<li><h4 id="作用-1"><a href="#作用-1" class="headerlink" title="作用"></a>作用</h4><blockquote>
+<p>提供人机交互的通道（<strong>数据录入</strong>  和 <strong>结果展示</strong>）</p>
+</blockquote>
+</li>
+<li><h4 id="数据录入-amp-展示"><a href="#数据录入-amp-展示" class="headerlink" title="数据录入&amp;展示"></a>数据录入&amp;展示</h4><blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//录入数据</span></span><br><span class="line">Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">Xxxx v = sc.nextXxxx();</span><br><span class="line"><span class="comment">//展示数据</span></span><br><span class="line">System.oyt.println(<span class="string">".."</span>)</span><br></pre></td></tr></table></figure>
+
+<hr>
+</blockquote>
+</li>
+<li><h4 id="代码结构"><a href="#代码结构" class="headerlink" title="代码结构"></a>代码结构</h4><blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Public <span class="keyword">void</span>  <span class="title">kaihu</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">//1. 录入数据</span></span><br><span class="line">         Try&#123;</span><br><span class="line">        <span class="comment">//2. 创建业务层对象 , 调用业务层方法 ---&gt; 返回结果数据 </span></span><br><span class="line">             System.out.println(“恭喜你,成功.....”);</span><br><span class="line">         &#125;<span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">             System.out.println( e.getMessage()) ;       </span><br><span class="line">         &#125;</span><br><span class="line">     &#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+</blockquote>
+</li>
+</ol>
+</blockquote>
+<h3 id="四、三层结构"><a href="#四、三层结构" class="headerlink" title="四、三层结构"></a>四、三层结构</h3><blockquote>
+<ol>
+<li><h4 id="结构分析"><a href="#结构分析" class="headerlink" title="结构分析"></a>结构分析</h4><blockquote>
+<p>用户 ( 人 — main )</p>
+<p>-————————————————-</p>
+<p>View  —-  采集数据 ,展示结果</p>
+<p>-————————————————-</p>
+<p>Service —- 业务逻辑(完成业务功能)</p>
+<p>-————————————————-</p>
+<p>Dao —- 完成数据库访问操作</p>
+<p>-————————————————-</p>
+<p>Db  — table</p>
+<hr>
+</blockquote>
+</li>
+<li><h4 id="图示案例"><a href="#图示案例" class="headerlink" title="图示案例"></a>图示案例</h4><blockquote>
+<h4 id=""><a href="#" class="headerlink" title=""></a><img src="F:%5Ctyp%E7%AC%94%E8%AE%B0%5CJDBC%5CPic%5C4-5.PNG" alt="4-5"></h4><p><img src=".%5CPic%5C4-6.PNG" alt="4-6"></p>
+<hr>
+</blockquote>
+</li>
+</ol>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/21/hello-world/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/10/21/JDBC_01/" rel="prev" title="JDBC_01">
+                JDBC_01 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Day-54-JDBC-04"><span class="nav-number">1.</span> <span class="nav-text">Day_54 JDBC_04</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#业务层、视图层、三层结构、连接池"><span class="nav-number">1.1.</span> <span class="nav-text">业务层、视图层、三层结构、连接池</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、Review"><span class="nav-number">1.1.1.</span> <span class="nav-text">一、Review</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#实体类的封装-——entity"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">实体类的封装 ——entity</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#O-R-Mapping-——DAO"><span class="nav-number">1.1.1.2.</span> <span class="nav-text">O-R Mapping  ——DAO</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、业务层（Service层，biz层）"><span class="nav-number">1.1.2.</span> <span class="nav-text">二、业务层（Service层，biz层）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#作用"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">作用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#业务的其他作用"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">业务的其他作用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Jdbc里的事务处理"><span class="nav-number">1.1.2.3.</span> <span class="nav-text">Jdbc里的事务处理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Jdbc里手动控制事务的API"><span class="nav-number">1.1.2.4.</span> <span class="nav-text">==Jdbc里手动控制事务的API==</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#如何将事务控制应用到现有的业务层代码中"><span class="nav-number">1.1.2.5.</span> <span class="nav-text">如何将事务控制应用到现有的业务层代码中</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#业务层代码开发步骤"><span class="nav-number">1.1.2.6.</span> <span class="nav-text">业务层代码开发步骤</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、View（显示逻辑——界面-或者-视图）"><span class="nav-number">1.1.3.</span> <span class="nav-text">三、View（显示逻辑——界面 或者  视图）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#作用-1"><span class="nav-number">1.1.3.1.</span> <span class="nav-text">作用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数据录入-amp-展示"><span class="nav-number">1.1.3.2.</span> <span class="nav-text">数据录入&amp;展示</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#代码结构"><span class="nav-number">1.1.3.3.</span> <span class="nav-text">代码结构</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、三层结构"><span class="nav-number">1.1.4.</span> <span class="nav-text">四、三层结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#结构分析"><span class="nav-number">1.1.4.1.</span> <span class="nav-text">结构分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#图示案例"><span class="nav-number">1.1.4.2.</span> <span class="nav-text">图示案例</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#null"><span class="nav-number">1.1.4.3.</span> <span class="nav-text"></span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
